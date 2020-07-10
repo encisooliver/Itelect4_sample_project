@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ITElec4db">
+  <DataContextMoniker Name="/ITElec4dbDataContext" />
+  <nestedChildShapes>
+    <classShape Id="76e49d77-1d81-43c6-909e-e09a24d3bb79" absoluteBounds="0.75, 1, 2, 1.3862939453125">
+      <DataClassMoniker Name="/ITElec4dbDataContext/MstCourse" />
+      <nestedChildShapes>
+        <elementListCompartment Id="29863407-e336-4a3f-8d88-3801a066b0cf" absoluteBounds="0.765, 1.46, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="c711da9e-06f5-4749-888b-65b852371233" absoluteBounds="3.5, 0.875, 2, 1.5785953776041664">
+      <DataClassMoniker Name="/ITElec4dbDataContext/MstStudent" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e0391768-8cd7-41ed-866d-eed7f1f3be74" absoluteBounds="3.515, 1.335, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.75 : 1.69314697265625); (3.5 : 1.69314697265625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/ITElec4dbDataContext/MstCourse/MstCourse_MstStudent" />
+      <nodes>
+        <classShapeMoniker Id="76e49d77-1d81-43c6-909e-e09a24d3bb79" />
+        <classShapeMoniker Id="c711da9e-06f5-4749-888b-65b852371233" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
