@@ -20,10 +20,18 @@ namespace itelec4
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js",
+                      "~/Scripts/wijmo.min.js",
+                      "~/Scripts/wijmo.input.min.js",
+                      "~/Scripts/wijmo.grid.min.js",
+                      "~/Scripts/wijmo.grid.filter.min.js",
+                      "~/Scripts/toastr.min.js",
+                      "~/Scripts/software.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/wijmo.min.css",
+                      "~/Content/toastr.min.css",
                       "~/Content/site.css"));
         }
     }

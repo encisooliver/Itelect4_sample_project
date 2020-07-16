@@ -7,15 +7,13 @@ using System.Web.Http;
 
 namespace itelec4.ApiControllers
 {
-    [RoutePrefix("api/course")]
     public class MstCourseController : ApiController
     {
         Data.ITElec4dbDataContext db = new Data.ITElec4dbDataContext();
 
-        [HttpGet, Route("list")]
-        public List<Api_Models.MstCourse_ApiModel> GetCourses()
+        [Authorize, HttpGet, Route("api/course/list")]
+        public List<Api_Models.MstCourse_ApiModel> ListCourse()
         {
-
             var courses = from d in db.MstCourses
                           select new Api_Models.MstCourse_ApiModel
                           {
@@ -24,11 +22,11 @@ namespace itelec4.ApiControllers
                               Course = d.Course
                           };
 
-            return courses.OrderByDescending(d => d.CourseCode).ToList();
+            return courses.ToList();
         }
 
-        [HttpGet, Route("detail/{id}")]
-        public Api_Models.MstCourse_ApiModel GetCourse(String id)
+        [Authorize, HttpGet, Route("api/course/detail/{id}")]
+        public Api_Models.MstCourse_ApiModel DetailCourse(String id)
         {
 
             var courses = from d in db.MstCourses
@@ -43,8 +41,8 @@ namespace itelec4.ApiControllers
             return courses.FirstOrDefault();
         }
 
-        [HttpPost, Route("course/add")]
-        public HttpResponseMessage AddCourse(Api_Models.MstCourse_ApiModel objCourse, String Id)
+        [Authorize, HttpPost, Route("api/course/add")]
+        public HttpResponseMessage AddCourse(Api_Models.MstCourse_ApiModel objCourse)
         {
             try
             {
@@ -64,8 +62,8 @@ namespace itelec4.ApiControllers
             }
         }
 
-        [HttpPut, Route("course/update/{id}")]
-        public HttpResponseMessage SaveCourse(Api_Models.MstCourse_ApiModel objCourse, String Id)
+        [Authorize, HttpPut, Route("api/course/update/{id}")]
+        public HttpResponseMessage UpdateCourse(Api_Models.MstCourse_ApiModel objCourse, String Id)
         {
             try
             {
@@ -78,15 +76,13 @@ namespace itelec4.ApiControllers
                     var updateCourse = course.FirstOrDefault();
                     updateCourse.CourseCode = objCourse.CourseCode;
                     updateCourse.Course = objCourse.Course;
-
-                    db.MstCourses.InsertOnSubmit(updateCourse);
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);
                 }
                 else
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "Course not found!");
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Course not found!");
                 }
             }
             catch (Exception e)
@@ -95,7 +91,7 @@ namespace itelec4.ApiControllers
             }
         }
 
-        [HttpDelete, Route("course/delete/{id}")]
+        [Authorize, HttpDelete, Route("api/course/delete/{id}")]
         public HttpResponseMessage DeleteCourse(String Id)
         {
             try

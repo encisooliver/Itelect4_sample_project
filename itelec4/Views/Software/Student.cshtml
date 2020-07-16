@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "Student List";
+}
+
+<h2>@ViewBag.Title</h2>
+@*Get templat to display courses*@
+<div>
+    <h4>List of all student</h4>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/Software" class="btn btn-default">Back</a>
+            <button class="btn btn-primary" onclick="buttonClickAddStudent()">Add</button>
+        </div>
+        <div class="panel-body">
+            <div id="wijmoGridStudentList"></div>
+        </div>
+    </div>
+</div>
+@*Get Course*@
+
+@* Templat Add course method #2 *@
+<div class="modal fae" id="modalStudentDetailForm" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Course Detail</h4>
+            </div>
+            <div class="modal-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Student Code:
+                    </dt>
+                    <dd>
+                        <input class="form-control" id="inputStudentCode" />
+                    </dd>
+                    <dt>
+                        Student:
+                    </dt>
+                    <dd>
+                        <input class="form-control" id="inputStudent" rows="5">
+                    </dd>
+                    <dt>
+                        Course:
+                    </dt>
+                    <dd>
+                        <div class="form-group">
+                            <div id="wijmoComboboxCourse"></div>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                @* Add/save new course #2 *@
+                <button class="btn btn-primary" onclick="buttonClickSaveCourse()">Save</button>
+                <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var wijmoGridStudentList;
+    var wijmoCollectionViewStudentList;
+    var studentId = 0;
+
+    var wijmoComboboxCourse;
+
+
+    function createWijmoComboboxCourse() {
+        var courseObservableArray = new wijmo.collections.ObservableArray();
+        $.ajax({
+            url: '/api/student/course/list',
+            cache: false,
+            type: 'GET',
+            contentType: 'application/json; charset=utf-8',
+            success: function (results) {
+                if (results.length > 0) {
+                    for (i = 0; i < results.length; i++) {
+                        courseObservableArray.push({
+                            Id: results[i]["Id"],
+                            CourseCode: results[i]["CourseCode"],
+                            Course: results[i]["Course"],
+                        });
+                }
+
+                    wijmoComboboxCourse.dispose();
+                    wijmoComboboxCourse = new wijmo.input.ComboBox('#wijmoComboboxCourse', {
+                        placeholder: "Select Course",
+                        itemsSource: courseObservableArray,
+                        displayMemberPath: "Course",
+                        selectedValuePath: "Id"
+                    });
+                }
+            }
+        });
+    }
+
+    function getDataStudentList() {
+        var studentListObservableArray = new wijmo.collections.ObservableArray;
+        $.ajax({
+            url: "/api/student/list",
+            cache: false,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            success: function (results) {
+                if (results.length > 0) {
+                    for (var i = 0; i < results.length; i++) {
+                        studentListObservableArray.push({
+                            ButtonEdit: "<button class='btn btn-primary btn-xs btn-block'>Edit</button>",
+                            ButtonDelete: "<button class='btn btn-danger btn-xs btn-block'>Delete</button>",
+                            Id: results[i]["Id"],
+                            StudentCode: results[i]["StudentCode"],
+                            FullName: results[i]["FullName"],
+                            CourseId: results[i]["CourseId"],
+                            Course: results[i]["Course"],
+                        });
+                    }
+                }
+            }
+        });
+
+        return studentListObservableArray;
+    }
+
+    function createWijmoGridStudentList() {
+        wijmoCollectionViewStudentList = new wijmo.collections.CollectionView(getDataStudentList());
+        wijmoCollectionViewStudentList.canFilter = true;
+
+        wijmoGridStudentList = new wijmo.grid.FlexGrid("#wijmoGridStudentList");
+        wijmoGridStudentList.initialize({
+            columns: [
+                {
+                    "header": "Edit",
+                    "binding": "ButtonEdit",
+                    "width": 70,
+                    "align": "center",
+                    "allowResizing": false,
+                    "allowSorting": false,
+                    "isContentHtml": true
+                },
+                {
+                    "header": "Delete",
+                    "binding": "ButtonDelete",
+                    "width": 70,
+                    "align": "center",
+                    "allowResizing": false,
+                    "allowSorting": false,
+                    "isContentHtml": true
+                },
+                {
+                    "header": "Student Code",
+                    "binding": "StudentCode",
+                    "allowSorting": true,
+                    "width": "3*"
+                },
+                {
+                    "header": "FullName",
+                    "binding": "FullName",
+                    "allowSorting": true,
+                    "width": "1*"
+                },
+                {
+                    "header": "Course",
+                    "binding": "Course",
+                    "allowSorting": true,
+                    "width": "1*"
+                }
+            ],
+            autoGenerateColumns: false,
+            itemsSource: wijmoCollectionViewStudentList,
+            isReadOnly: true,
+            autoSizeMode: wijmo.grid.AutoSizeMode.Both,
+            allowDragging: wijmo.grid.AllowDragging.None,
+            selectionMode: wijmo.grid.SelectionMode.Row,
+        });
+    }
+
+    @* Templat Add student #2 *@
+    function buttonClickAddStudent() {
+        document.getElementById("modalTitle").innerHTML = "Add Course";
+
+        $("#modalStudentDetailForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+
+        createWijmoComboboxCourse();
+    }
+
+
+    window.onload = function () {
+        createWijmoGridStudentList();
+        wijmoComboboxCourse = new wijmo.input.ComboBox('#wijmoComboboxCourse');
+    }
+</script>

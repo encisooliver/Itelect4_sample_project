@@ -7,12 +7,25 @@ using System.Web.Http;
 
 namespace itelec4.ApiControllers
 {
-    [RoutePrefix("api/student")]
     public class MstStudentController : ApiController
     {
         Data.ITElec4dbDataContext db = new Data.ITElec4dbDataContext();
 
-        [HttpGet, Route("list")]
+        [Authorize, HttpGet, Route("api/student/course/list")]
+        public List<Api_Models.MstCourse_ApiModel> ListCourse()
+        {
+            var courses = from d in db.MstCourses
+                          select new Api_Models.MstCourse_ApiModel
+                          {
+                              Id = d.Id,
+                              CourseCode = d.CourseCode,
+                              Course = d.Course
+                          };
+
+            return courses.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/student/list")]
         public List<Api_Models.MstStudent_ApiModel> ListStudent()
         {
             var students = from d in db.MstStudents

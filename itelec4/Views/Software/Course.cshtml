@@ -1,0 +1,302 @@
+﻿@{
+    ViewBag.Title = "Course List";
+}
+
+<h2>@ViewBag.Title</h2>
+@*Get templat to display courses #1*@
+<div>
+    <h4>List of all courses</h4>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/Software" class="btn btn-default">Back</a>
+            @*Templat Add courses #2*@
+            <button class="btn btn-primary" onclick="buttonClickAddCourse()">Add</button>
+        </div>
+        <div class="panel-body">
+            <div id="wijmoGridCourseList"></div>
+        </div>
+    </div>
+</div>
+
+@* Templat Add course method #2 *@
+<div class="modal fae" id="modalCourseDetailForm" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Course Detail</h4>
+            </div>
+            <div class="modal-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Course Code:
+                    </dt>
+                    <dd>
+                        <input class="form-control" id="inputCourseCode" />
+                    </dd>
+                    <dt>
+                        Course:
+                    </dt>
+                    <dd>
+                        <textarea class="form-control" id="inputCourse" rows="5"></textarea>
+                    </dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                @* Add/save new course #2 *@
+                <button class="btn btn-primary" onclick="buttonClickSaveCourse()">Save</button>
+                <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fae" id="modalCourseDeleteForm" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Delete Course</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this course?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="buttonClickConfirmDeleteCourse()">Delete</button>
+                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    @* Display courses #1 *@
+    var wijmoGridCourseList;
+    var wijmoCollectionViewCourseList;
+
+    var courseId = 0;
+
+    @* Display courses #1 *@
+    function getDataCourseList() {
+        var courseListObservableArray = new wijmo.collections.ObservableArray;
+        $.ajax({
+            url: "/api/course/list",
+            cache: false,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            success: function (results) {
+                if (results.length > 0) {
+                    for (var i = 0; i < results.length; i++) {
+                        courseListObservableArray.push({
+                            ButtonEdit: "<button class='btn btn-primary btn-xs btn-block' onclick='buttonClickEditCourse()'>Edit</button>",
+                            ButtonDelete: "<button class='btn btn-danger btn-xs btn-block' onclick='buttonClickDeleteCourse()'>Delete</button>",
+                            Id: results[i]["Id"],
+                            CourseCode: results[i]["CourseCode"],
+                            Course: results[i]["Course"]
+                        });
+                    }
+                }
+            }
+        });
+
+        return courseListObservableArray;
+    }
+
+    @* Display courses #1 *@
+    function createWijmoGridCourseList() {
+        wijmoCollectionViewCourseList = new wijmo.collections.CollectionView(getDataCourseList());
+        wijmoCollectionViewCourseList.canFilter = true;
+
+        wijmoGridCourseList = new wijmo.grid.FlexGrid("#wijmoGridCourseList");
+        wijmoGridCourseList.initialize({
+            columns: [
+                {
+                    "header": "Edit",
+                    "binding": "ButtonEdit",
+                    "width": 70,
+                    "align": "center",
+                    "allowResizing": false,
+                    "allowSorting": false,
+                    "isContentHtml": true
+                },
+                {
+                    "header": "Delete",
+                    "binding": "ButtonDelete",
+                    "width": 70,
+                    "align": "center",
+                    "allowResizing": false,
+                    "allowSorting": false,
+                    "isContentHtml": true
+                },
+                {
+                    "header": "Course Code",
+                    "binding": "CourseCode",
+                    "allowSorting": true,
+                    "width": "3*"
+                },
+                {
+                    "header": "Course",
+                    "binding": "Course",
+                    "allowSorting": true,
+                    "width": "1*"
+                }
+            ],
+            autoGenerateColumns: false,
+            itemsSource: wijmoCollectionViewCourseList,
+            isReadOnly: true,
+            autoSizeMode: wijmo.grid.AutoSizeMode.Both,
+            allowDragging: wijmo.grid.AllowDragging.None,
+            selectionMode: wijmo.grid.SelectionMode.Row,
+
+        });
+    }
+
+    @* Templat Add course method #2 *@
+    function buttonClickAddCourse() {
+        document.getElementById("modalTitle").innerHTML = "Add Course";
+
+        $("#modalCourseDetailForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+
+        courseId = 0;
+        document.getElementById("inputCourseCode").value = "";
+        document.getElementById("inputCourse").value = "";
+    }
+
+    @* Add course method api call api/course/add #2 *@
+    function buttonClickSaveCourse() {
+        var course = document.getElementById("inputCourse").value;
+        var courseCode = document.getElementById("inputCourseCode").value;
+
+        var courseObject = new Object();
+        courseObject.CourseCode = courseCode;
+        courseObject.Course = course;
+
+        var courseData = JSON.stringify(courseObject);
+
+        if (courseId == 0) {
+            $.ajax({
+                url: "/api/course/add",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: courseData,
+                statusCode: {
+                    200: function () {
+                        wijmoCollectionViewCourseList = new wijmo.collections.CollectionView(getDataCourseList());
+                        wijmoCollectionViewCourseList.canFilter = true;
+                        wijmoGridCourseList.itemsSource = wijmoCollectionViewCourseList;
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.success("Save Successful");
+                    },
+                    404: function (message) {
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                    },
+                    400: function (message) {
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                    },
+                    500: function (message) {
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                    }
+                }
+            });
+        } else {
+            $.ajax({
+                url: "/api/course/update/" + courseId,
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: courseData,
+                statusCode: {
+                    200: function () {
+                        wijmoCollectionViewCourseList = new wijmo.collections.CollectionView(getDataCourseList());
+                        wijmoCollectionViewCourseList.canFilter = true;
+                        wijmoGridCourseList.itemsSource = wijmoCollectionViewCourseList;
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.success("Update Successful");
+                    },
+                    404: function (message) {
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                    },
+                    400: function (message) {
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                    },
+                    500: function (message) {
+                        $("#modalCourseDetailForm").modal("hide");
+                        toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                    }
+                }
+            });
+        }
+    }
+
+    function buttonClickEditCourse() {
+        document.getElementById("modalTitle").innerHTML = "Edit Customer";
+
+        $("#modalCourseDetailForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+
+        wijmoCollectionViewCourseList.editItem(wijmoCollectionViewCourseList.currentItem);
+
+        var id = wijmoCollectionViewCourseList.currentEditItem.Id;
+        var couseCode = wijmoCollectionViewCourseList.currentEditItem.CourseCode;
+        var course = wijmoCollectionViewCourseList.currentEditItem.Course;
+
+        courseId = id;
+        document.getElementById("inputCourseCode").value = couseCode + courseId;
+        document.getElementById("inputCourse").value = course;
+
+    }
+
+    function buttonClickDeleteCourse() {
+        $("#modalCourseDeleteForm").modal({
+            show: true,
+            backdrop: "static"
+        });
+    }
+
+    function buttonClickConfirmDeleteCourse() {
+        wijmoCollectionViewCourseList.editItem(wijmoCollectionViewCourseList.currentItem);
+        var id = wijmoCollectionViewCourseList.currentEditItem.Id;
+
+        $.ajax({
+            url: "/api/course/delete/" + id,
+            type: "DELETE",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            statusCode: {
+                200: function () {
+                    wijmoCollectionViewCourseList = new wijmo.collections.CollectionView(getDataCourseList());
+                    wijmoCollectionViewCourseList.canFilter = true;
+                    wijmoGridCourseList.itemsSource = wijmoCollectionViewCourseList;
+                    $("#modalCourseDeleteForm").modal("hide");
+                    toastr.success("Delete Successful");
+                },
+                404: function (message) {
+                    $("#modalCourseDeleteForm").modal("hide");
+                    toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 404 - Not Found");
+                },
+                400: function (message) {
+                    $("#modalCourseDeleteForm").modal("hide");
+                    toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 400 - Bad Request");
+                },
+                500: function (message) {
+                    $("#modalCourseDeleteForm").modal("hide");
+                    toastr.error(message.responseText.replace(/^"(.*)"$/, '$1'), "Error 500 - Internal Server Error");
+                }
+            }
+        });
+    }
+
+    window.onload = function () {
+        @* Display courses #1 *@
+        createWijmoGridCourseList();
+    }
+</script>

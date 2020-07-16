@@ -205,6 +205,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
+    <Content Include="Content\wijmo.css" />
+    <Content Include="Content\wijmo.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -230,6 +234,17 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\software.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Scripts\wijmo.grid.filter.js" />
+    <Content Include="Scripts\wijmo.grid.filter.min.js" />
+    <Content Include="Scripts\wijmo.grid.js" />
+    <Content Include="Scripts\wijmo.grid.min.js" />
+    <Content Include="Scripts\wijmo.input.js" />
+    <Content Include="Scripts\wijmo.input.min.js" />
+    <Content Include="Scripts\wijmo.js" />
+    <Content Include="Scripts\wijmo.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -269,6 +284,8 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Software\Index.cshtml" />
+    <Content Include="Views\Software\Course.cshtml" />
+    <Content Include="Views\Software\Student.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -13,5 +13,17 @@ namespace itelec4.Controllers
         {
             return View();
         }
+
+        // GET: Software/Course
+        public ActionResult Course()
+        {
+            return View();
+        }
+
+        // GET: Software/Student
+        public ActionResult Student()
+        {
+            return View();
+        }
     }
 }
