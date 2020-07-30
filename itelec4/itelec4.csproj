@@ -176,6 +176,7 @@
     <Compile Include="ApiControllers\MstDoctorController.cs" />
     <Compile Include="ApiControllers\MstNurseController.cs" />
     <Compile Include="ApiControllers\MstStudentController.cs" />
+    <Compile Include="ApiControllers\SampleController.cs" />
     <Compile Include="Api_Models\GroupCourseModel.cs" />
     <Compile Include="Api_Models\HealthWorkerModel.cs" />
     <Compile Include="Api_Models\MstCourse_ApiModel.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig2.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
