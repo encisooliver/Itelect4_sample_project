@@ -173,8 +173,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllers\MstCourseController.cs" />
+    <Compile Include="ApiControllers\MstDoctorController.cs" />
+    <Compile Include="ApiControllers\MstNurseController.cs" />
     <Compile Include="ApiControllers\MstStudentController.cs" />
+    <Compile Include="Api_Models\GroupCourseModel.cs" />
+    <Compile Include="Api_Models\HealthWorkerModel.cs" />
     <Compile Include="Api_Models\MstCourse_ApiModel.cs" />
+    <Compile Include="Api_Models\Doctor_ApiModel.cs" />
+    <Compile Include="Api_Models\Nurse_ApiModel.cs" />
     <Compile Include="Api_Models\MstStudent_ApiModel.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -286,6 +292,7 @@
     <Content Include="Views\Software\Index.cshtml" />
     <Content Include="Views\Software\Course.cshtml" />
     <Content Include="Views\Software\Student.cshtml" />
+    <Content Include="Views\Software\Subject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

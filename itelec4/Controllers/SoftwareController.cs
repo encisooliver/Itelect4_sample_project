@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,8 @@ namespace itelec4.Controllers
 {
     public class SoftwareController : Controller
     {
+        Data.ITElec4dbDataContext db = new Data.ITElec4dbDataContext();
+
         // GET: Software
         public ActionResult Index()
         {
@@ -17,7 +20,16 @@ namespace itelec4.Controllers
         // GET: Software/Course
         public ActionResult Course()
         {
+
             return View();
+
+            //if (User.Identity.GetUserId() != null)
+            //{
+            //}
+            //else
+            //{
+            //    return Redirect("/Software");
+            //}
         }
 
         // GET: Software/Student
@@ -25,5 +37,12 @@ namespace itelec4.Controllers
         {
             return View();
         }
+
+        // GET: Software/Subject
+        public ActionResult Subject()
+        {
+            return View();
+        }
+
     }
 }

@@ -13,6 +13,17 @@
             <button class="btn btn-primary" onclick="buttonClickAddCourse()">Add</button>
         </div>
         <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>
+                    <button class="btn btn-primary" onclick="buttonClickSearch()">Search</button>
+                </dt>
+                <dd>
+                    <input class="form-control" id="inputSearch" />
+                </dd>
+                <dd>
+                    
+                </dd>
+            </dl>
             <div id="wijmoGridCourseList"></div>
         </div>
     </div>
@@ -77,8 +88,10 @@
     @* Display courses #1 *@
     function getDataCourseList() {
         var courseListObservableArray = new wijmo.collections.ObservableArray;
+        var stringFilter = document.getElementById("inputSearch").value;
+
         $.ajax({
-            url: "/api/course/list",
+            url: "/api/course/list/" + stringFilter,
             cache: false,
             type: "GET",
             contentType: "application/json; charset=utf-8",
@@ -147,6 +160,10 @@
             selectionMode: wijmo.grid.SelectionMode.Row,
 
         });
+    }
+
+    function buttonClickSearch() {
+        wijmoCollectionViewCourseList = new wijmo.collections.CollectionView(getDataCourseList());
     }
 
     @* Templat Add course method #2 *@

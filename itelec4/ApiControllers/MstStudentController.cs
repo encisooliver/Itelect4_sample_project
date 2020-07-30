@@ -58,7 +58,7 @@ namespace itelec4.ApiControllers
             return student.FirstOrDefault();
         }
 
-        [HttpPost, Route("add")]
+        [HttpPost, Route("api/student/add")]
         public HttpResponseMessage AddStudent(Api_Models.MstStudent_ApiModel objStudent)
         {
             try
@@ -93,7 +93,7 @@ namespace itelec4.ApiControllers
             }
         }
 
-        [HttpPut, Route("update/{studentId}")]
+        [HttpPut, Route("api/student/update/{studentId}")]
         public HttpResponseMessage UpdateStudent(String studentId, Api_Models.MstStudent_ApiModel objStudent)
         {
             try

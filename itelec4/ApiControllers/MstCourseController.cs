@@ -25,6 +25,62 @@ namespace itelec4.ApiControllers
             return courses.ToList();
         }
 
+        [Authorize, HttpGet, Route("api/course/list/{filter}")]
+        public List<Api_Models.MstCourse_ApiModel> ListFilterCourse(String filter)
+        {
+            var courses = from d in db.MstCourses
+                          where d.Course.ToLower().Contains(filter)
+                          || d.CourseCode.ToLower().Contains(filter)
+                          select new Api_Models.MstCourse_ApiModel
+                          {
+                              Id = d.Id,
+                              CourseCode = d.CourseCode,
+                              Course = d.Course
+                          };
+
+            return courses.ToList();
+        }
+
+        [Authorize, HttpGet, Route("api/course/groupdata")]
+        public List<Api_Models.GroupCourseModel> ListGroupCourse()
+        {
+            var courses = from d in db.MstCourses
+                          select new Api_Models.MstCourse_ApiModel
+                          {
+                              Id = d.Id,
+                              CourseCode = d.CourseCode,
+                              Course = d.Course
+                          };
+
+            var groupCourses = from p in courses
+                               group p by p.CourseCode into g
+                               select new Api_Models.GroupCourseModel
+                               {
+                                   Course = g.Key,
+                                   Total = g.Key.Count()
+                               };
+
+            return groupCourses.ToList();
+        }
+
+
+
+
+        [Authorize, HttpGet, Route("api/course/filter/{filterString}")]
+        public List<Api_Models.MstCourse_ApiModel> FilterGetCourse(String filterString)
+        {
+            var courses = from d in db.MstCourses
+                          where d.Course.ToLower() == filterString.ToLower()
+                          select new Api_Models.MstCourse_ApiModel
+                          {
+                              Id = d.Id,
+                              CourseCode = d.CourseCode,
+                              Course = d.Course
+                          };
+
+            return courses.ToList();
+        }
+
         [Authorize, HttpGet, Route("api/course/detail/{id}")]
         public Api_Models.MstCourse_ApiModel DetailCourse(String id)
         {
@@ -46,11 +102,13 @@ namespace itelec4.ApiControllers
         {
             try
             {
+
                 Data.MstCourse newCourse = new Data.MstCourse
                 {
                     CourseCode = objCourse.CourseCode,
                     Course = objCourse.Course
                 };
+
                 db.MstCourses.InsertOnSubmit(newCourse);
                 db.SubmitChanges();
 
